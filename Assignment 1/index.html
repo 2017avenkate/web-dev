@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Name the 50 States
+		</title>
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<script src = "index.js"></script>
+	</head>
+	<body>
+		<div class="jumbotron" style="background-color:skyblue">
+			<h1> Name the 50 States</h1>
+		</div>
+		
+		<form>
+			Enter name of state: <br>
+			<input type = "text" id = "stateName" onkeyup = "timerFunction();check()">
+		</form>
+		<br><br>
+		<div id = "display"> States entered will display here: </div>
+		<br><br>
+		<div class="progress" style="width:50%;margin-left:auto;margin-right:auto">
+			<div class="progress-bar progress-bar-striped active" id="perccomp" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				0%
+			</div>
+		</div>
+		<br><br>
+		<div id = "time"> Timer: </div>
+		<div id = "timer">180</div>
+		
+		<br><br>
+		<center>
+				<button class="btn btn-success" onclick="timerFunction();check()">Play</button>
+				<button class="btn btn-danger" onclick="restart()">Restart</button>
+		</center>				
+		<br>
+		<div id = "score"> Score: </div>
+		<div id = "scoreInt1"> 0 </div>
+
+	</body>
+</html>

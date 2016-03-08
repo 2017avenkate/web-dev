@@ -1,0 +1,111 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>DOM Tree Navigation</title>
+	<style type="text/css">
+		div{
+			background-color: white;
+			border-radius: 8px;
+			border: 1px black solid;
+			margin:12px;
+			padding: 2px;
+		}
+		p{
+			background-color: white;
+			border: 2px black dashed;
+			opacity: .4;
+		}
+		.location{
+			width: 40%;
+			background-color: white;
+		}
+		.animal{
+			background-color: white;
+		}
+		ul{
+			background-color: white;
+			border-radius: 8px;
+			border: 1px black solid;
+			margin:12px;
+			padding: 2px;
+		}
+	</style>
+	<script>
+		function highlight()
+		{
+			var x = event.target;
+			var numberOfChildren = x.childElementCount;
+			if(numberOfChildren == 0)
+			{
+				if(x.nextElementSibling == null)
+				{
+					var temp = x.parentNode;
+					if(temp.nextElementSibling == null)
+					{
+						temp = temp.parentNode;
+						fadeIn(temp.nextElementSibling);
+					}
+					else
+					{
+						fadeIn(temp.nextElementSibling);
+					}
+				}
+				else
+				{
+					fadeIn(x.nextElementSibling);
+				}
+			}
+			else
+			{
+				fadeIn(x.firstElementChild);
+			}
+		}
+		function fadeIn(x)
+		{
+			var colors = ["blue", "green", "red", "yellow", "orange"];
+			var randomNumber = Math.floor(Math.random() * 5);
+			x.style.background = colors[randomNumber];
+		}
+	</script>
+</head>
+<body class="fadeIn" onclick="highlight()">
+	<div class="location">
+		Zoo
+		<div class="animal">
+			Giraffe
+			<div>Ga</div>
+			<div>Gb</div>
+			<div>Gc</div>
+			<div>Gd</div>
+			<div>Ge</div>
+		</div>
+	</div>
+	<div class="location">
+		Wild
+		<div class="animal">
+			Lion
+			<div id="La">La</div>
+			<div>Lb</div>
+			<div>Lc</div>
+		</div>
+		<div class="animal">
+			<span style="color:blue">Elephant</span>
+			<div>Ea
+				<p>Eaa</p>
+			</div>
+			<p>Eb</p>
+			<p>Ec</p>
+		</div>
+		<div>
+			<ul>
+				<div>
+					<li>Monkey</li>
+				</div>
+				<div>
+					<li>Rhino</li>
+				</dvi>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

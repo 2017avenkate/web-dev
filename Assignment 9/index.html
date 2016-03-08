@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type = "text/css">
+			h1, h2
+			{
+				text-shadow: 2px 2px #FF0000;
+				text-align: center;
+			}
+			body
+			{
+				background-color: lightblue
+			}
+		</style>
+		<script src="https://maps.googleapis.com/maps/api/js"></script>
+		<script>
+			function initialize()
+			{
+			  var lat = parseInt(document.getElementById("lat").value);
+			  var lng = parseInt(document.getElementById("lng").value);
+			  var mapProp = {
+			    center:new google.maps.LatLng(lat, lng),
+			    zoom:4,
+			    mapTypeId:google.maps.MapTypeId.ROADMAP
+			  };
+			  var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+			}
+			google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+	</head>
+
+	<body>
+		<center>
+			<div id="googleMap" style="width:500px;height:380px;"></div>
+		</center>
+		<center>
+			<div> <h1> Latitude: <h1> 
+				<input id = "lat" value = "37.5000"></div>
+
+			<div> <h1> Longitude: <h1> 
+				<input id = "lng" value = "79.0000"></div>
+			<button onclick="initialize()">Change View</button>
+		</center>
+	</body>
+</html>

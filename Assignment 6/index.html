@@ -1,0 +1,578 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title> Canvas </title>
+	<style type = "text/css">
+		h1
+		{
+			text-align: center;
+			text-shadow: 1.5px 1px #0000FF;
+		}
+		body
+		{
+			background-color: lightblue;
+		}
+	</style>
+	<script>
+		function main()
+		{
+			var c;
+			var ctx;
+			var x;
+			var y;
+			var xf;
+			var yf;
+			var yprev;
+			var xprev;
+			var yfprev;
+			var xfprev;
+			var inBox = [];
+			var inRect = [];
+			var count = 0;
+			var count2 = 0;
+			var dragok = false;
+			var offsetx;
+			var offsety;
+			var temp;
+			var hasCircles;
+			var canMove;
+			var move;
+			var width;
+			var height;
+			function init()
+			{
+				c = document.getElementById("myCanvas");
+				ctx = c.getContext("2d");
+				offsetx = c.offsetLeft + 10;
+				offsety = c.offsetTop + 10;
+				temp = 0;
+				hasCircles = 0;
+				canMove = 0;
+				move = 0;
+				width = 0;
+				height = 0;
+				positionOfCirclesx = [];
+				positionOfCirclesy = [];
+				positionOfCCirclesx = [];
+				positionOfCCirclesy = [];
+			}
+			function drawCircle(x, y)
+			{
+				ctx.fillStyle = "#000000";
+	    		ctx.beginPath();
+	    		ctx.arc(x, y, 15, 0, 2 * Math.PI);
+	    		ctx.fill();
+	    		positionOfCirclesx[count] = x;
+				positionOfCirclesy[count] = y;
+	    		count += 1;
+			}
+			function drawCircle2(x, y)
+			{
+				ctx.fillStyle = "#000000";
+				ctx.beginPath();
+				ctx.arc(x, y, 15, 0, 2 * Math.PI);
+	    		ctx.fill();
+			}
+			function drawCircleColor(x, y)
+			{
+				ctx.fillStyle = "#0000FF";
+				ctx.beginPath();
+				ctx.arc(x, y, 15, 0, 2 * Math.PI);
+	    		ctx.fill();
+	    		positionOfCCirclesx[count2] = x;
+	    		positionOfCCirclesy[count2] = y;
+	    		count2 += 1;
+			}
+			function drawCircleColor2(x, y)
+			{
+				ctx.fillStyle = "#0000FF";
+				ctx.beginPath();
+				ctx.arc(x, y, 15, 0, 2 * Math.PI);
+	    		ctx.fill();
+			}
+			function drawRectangle(x, y, xf, yf)
+			{				
+				ctx.strokeRect(x, y, xf, yf);
+			}
+			function onDown(event)
+			{
+				if(canMove == 1)
+				{
+					for(var i = 0; i < inRect.length; i++)
+					{
+						inRect[i] = 0;
+					}
+					xprev = x;
+					yprev = y;
+					xfprev = xf;
+					yfprev = yf;
+					xtemp = event.clientX - offsetx;
+					ytemp = event.clientY - offsety;
+					if(xtemp < Math.max(x, xf) && xtemp > Math.min(x, xf) && ytemp < Math.max(y, yf) && ytemp > Math.min(y, yf))
+					{
+						move = 1;
+						for(var j = 0; j < positionOfCirclesx.length; j++)
+						{
+							if(positionOfCirclesx[j] < Math.max(xf, x) && positionOfCirclesx[j] > Math.min(xf, x) && positionOfCirclesy[j] < Math.max(yf, y) && positionOfCirclesy[j] > Math.min(yf, y))
+							{
+								drawCircleColor(positionOfCirclesx[j], positionOfCirclesy[j]);
+							}
+						}
+						for(var i = 0; i < positionOfCCirclesx.length; i++)
+						{
+							if(positionOfCCirclesx[i] < Math.max(xfprev, xprev) && positionOfCCirclesx[i] > Math.min(xfprev, xprev) && positionOfCCirclesy[i] > Math.min(yfprev, yprev) && positionOfCCirclesy[i] < Math.max(yfprev, yprev))
+							{
+								inBox[i] = 1;
+							}
+						}
+					}
+					else
+					{
+						redraw();
+						hasCircles = 0;
+					}
+				}
+				x = event.clientX - offsetx;
+				y = event.clientY - offsety;
+				
+				dragok = true;
+				c.onmousemove = onMove;			
+			}
+			function onUp(event)
+			{
+				xf = event.clientX - offsetx;
+				yf = event.clientY - offsety;
+				var coords = "x: " + x + ", y: " + y + " xf: " + xf + " yf: " + yf;
+				document.getElementById("temp").innerHTML = coords;
+				if(x == xf && y == yf)
+				{
+					drawCircle(x, y);
+				}
+				else //should have fixed issue with coordinates
+				{
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(positionOfCirclesx[i] < Math.max(xf, x) && positionOfCirclesx[i] > Math.min(xf, x) && positionOfCirclesy[i] < Math.max(yf, y) && positionOfCirclesy[i] > Math.min(yf, y) && move == 0)
+						{
+							hasCircles = 1;
+							drawCircleColor2(positionOfCirclesx[i], positionOfCirclesy[i]);
+						}
+					}					
+				}
+
+				if(hasCircles == 0)
+				{
+					redraw();					
+				}
+				else
+				{
+					if(move == 1)
+					{
+						for(var i = 0; i < inBox.length; i++)
+						{
+							if(inBox[i] == 1)
+							{
+								indexEqualx = positionOfCirclesx.indexOf(positionOfCCirclesx[i]);
+								indexEqualy = positionOfCirclesy.indexOf(positionOfCCirclesy[i]);
+								if(xf >= xtemp)
+								{
+									positionOfCirclesx[indexEqualx] += xdist;
+								}
+								else
+								{
+									positionOfCirclesx[indexEqualx] -= xdist;
+								}
+								if(yf >= ytemp)
+								{
+									positionOfCirclesy[indexEqualy] += ydist;
+								}
+								else
+								{
+									positionOfCirclesy[indexEqualy] -= ydist;
+								}
+							}
+							
+						}
+						for(var i = 0; i < inBox.length; i++)
+						{
+							inBox[i] = 0;
+						}
+						redraw();
+						positionOfCCirclesx = [];
+						positionOfCCirclesy = [];
+					}
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(positionOfCirclesx[i] < Math.max(xf, x) && positionOfCirclesx[i] > Math.min(xf, x) && positionOfCirclesy[i] < Math.max(yf, y) && positionOfCirclesy[i] > Math.min(yf, y))
+						{
+							inRect[i] = 1;
+						}
+					}
+					canMove = 1;
+				}
+				dragok = false;
+				c.onmousemove = null;
+				move = 0;
+			}
+			function onMove(event)
+			{
+				redraw();
+				xf = event.clientX - offsetx;
+				yf = event.clientY - offsety;
+				if(move == 1)
+				{
+					hasCircles = 1;
+					xdist = Math.abs(xf - xtemp);
+					ydist = Math.abs(yf - ytemp); 
+					
+					for(var i = 0; i < inBox.length; i++)
+					{
+						if(inBox[i] == 1)
+						{
+							if(xf >= xtemp && yf >= ytemp)
+							{
+								drawCircleColor2(positionOfCCirclesx[i] + xdist, positionOfCCirclesy[i] + ydist);
+							}
+							if(xf > xtemp && yf <= ytemp)
+							{
+								drawCircleColor2(positionOfCCirclesx[i] + xdist, positionOfCCirclesy[i] - ydist);
+							}
+							if(xf < xtemp && yf >= ytemp)
+							{
+								drawCircleColor2(positionOfCCirclesx[i] - xdist, positionOfCCirclesy[i] + ydist);
+							}
+							if(xf <= xtemp && yf < ytemp)
+							{
+								drawCircleColor2(positionOfCCirclesx[i] - xdist, positionOfCCirclesy[i] - ydist);
+							}
+						}
+					}
+					if(xprev <= xfprev && yprev <= yfprev) //creates the rectangle that moves with the circles
+					{
+						if(xtemp >= xf && ytemp >= yf)
+						{
+							drawRectangle(xprev - xdist, yprev - ydist, width, height);
+						}
+						if(xtemp < xf && ytemp >= yf)
+						{
+							drawRectangle(xprev + xdist, yprev - ydist, width, height);
+						}
+						if(xtemp > xf && ytemp <= yf)
+						{
+							drawRectangle(xprev - xdist, yprev + ydist, width, height);
+						}
+						if(xtemp <= xf && ytemp < yf)
+						{
+							drawRectangle(xprev + xdist, yprev + ydist, width, height);
+						}
+					}
+					if(xprev < xfprev && yprev >= yfprev)
+					{
+						if(xtemp >= xf && ytemp >= yf)
+						{
+							drawRectangle(xprev - xdist, yfprev - ydist, width, height);
+						}
+						if(xtemp < xf && ytemp >= yf)
+						{
+							drawRectangle(xprev + xdist, yfprev - ydist, width, height);
+						}
+						if(xtemp > xf && ytemp <= yf)
+						{
+							drawRectangle(xprev - xdist, yfprev + ydist, width, height);
+						}
+						if(xtemp <= xf && ytemp < yf)
+						{
+							drawRectangle(xprev + xdist, yfprev + ydist, width, height);
+						}
+					}
+					if(xprev > xfprev && yprev <= yfprev)
+					{
+						if(xtemp >= xf && ytemp >= yf)
+						{
+							drawRectangle(xfprev - xdist, yprev - ydist, width, height);
+						}
+						if(xtemp < xf && ytemp >= yf)
+						{
+							drawRectangle(xfprev + xdist, yprev - ydist, width, height);
+						}
+						if(xtemp > xf && ytemp <= yf)
+						{
+							drawRectangle(xfprev - xdist, yprev + ydist, width, height);
+						}
+						if(xtemp <= xf && ytemp < yf)
+						{
+							drawRectangle(xfprev + xdist, yprev + ydist, width, height);
+						}
+					}
+					if(xprev >= xfprev && yprev >= yfprev)
+					{
+						if(xtemp >= xf && ytemp >= yf)
+						{
+							drawRectangle(xfprev - xdist, yfprev - ydist, width, height);
+						}
+						if(xtemp < xf && ytemp >= yf)
+						{
+							drawRectangle(xfprev + xdist, yfprev - ydist, width, height);
+						}
+						if(xtemp > xf && ytemp <= yf)
+						{
+							drawRectangle(xfprev - xdist, yfprev + ydist, width, height);
+						}
+						if(xtemp <= xf && ytemp < yf)
+						{
+							drawRectangle(xfprev + xdist, yfprev + ydist, width, height);
+						}
+					}
+				}
+				else
+				{
+					width = Math.abs(xf - x);
+					height = Math.abs(yf - y);
+					if(x >= xf && y >= yf)
+					{
+						drawRectangle(xf, yf, width, height);
+					}
+					if(x < xf && y >= yf)
+					{
+						drawRectangle(x, yf, width, height);
+					}
+					if(x > xf && y <= yf)
+					{
+						drawRectangle(xf, y, width, height);
+					}
+					if(x <= xf && y < yf)
+					{
+						drawRectangle(x, y, width, height);
+					}
+				}				
+			}
+			function checkKey(e)
+			{
+				e = e || window.event;
+				if(e.keyCode == '38')
+				{
+					console.log("up");				
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(inRect[i] == 1)
+						{
+							positionOfCirclesy[i] -= 10;
+							drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+						}
+					}
+					redrawkey();
+					if(x >= xf && y >= yf)
+					{
+						y -= 10;
+						yf -= 10;
+						drawRectangle(xf, yf, width, height);
+					}
+					if(x < xf && y >= yf)
+					{
+						y -= 10;
+						yf -= 10;
+						drawRectangle(x, yf, width, height);
+					}
+					if(x > xf && y <= yf)
+					{
+						yf -= 10;
+						y -= 10;
+						drawRectangle(xf, y, width, height);
+					}
+					if(x <= xf && y < yf)
+					{
+						yf -= 10;
+						y -=10;
+						drawRectangle(x, y, width, height);
+					}									
+				}
+				else if(e.keyCode == '40')
+				{
+					console.log("down");
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(inRect[i] == 1)
+						{
+							positionOfCirclesy[i] += 10;
+							drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+						}
+					}
+					redrawkey();
+					if(x >= xf && y >= yf)
+					{
+						y += 10;
+						yf += 10;
+						drawRectangle(xf, yf, width, height);
+					}
+					if(x < xf && y >= yf)
+					{
+						y += 10;
+						yf += 10;
+						drawRectangle(x, yf, width, height);
+					}
+					if(x > xf && y <= yf)
+					{
+						yf += 10;
+						y += 10;
+						drawRectangle(xf, y, width, height);
+					}
+					if(x <= xf && y < yf)
+					{
+						yf += 10;
+						y += 10;
+						drawRectangle(x, y, width, height);
+					}					
+				}
+				else if(e.keyCode == '37')
+				{
+					console.log("left");
+					redrawkey();						
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(inRect[i] == 1)
+						{
+							positionOfCirclesx[i] -= 10;
+							drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+						}
+					}
+					redrawkey();
+					if(x >= xf && y >= yf)
+					{
+						x -= 10;
+						xf -= 10;
+						drawRectangle(xf, yf, width, height);
+					}
+					if(x < xf && y >= yf)
+					{
+						xf -= 10;
+						x -= 10;
+						drawRectangle(x, yf, width, height);
+					}
+					if(x > xf && y <= yf)
+					{
+						x -= 10;
+						xf -= 10;
+						drawRectangle(xf, y, width, height);
+					}
+					if(x <= xf && y < yf)
+					{
+						xf -= 10;
+						x -= 10;
+						drawRectangle(x, y, width, height);
+					}					
+				}
+				else if(e.keyCode == '39')
+				{
+					console.log("right");
+					redrawkey();						
+					for(var i = 0; i < positionOfCirclesx.length; i++)
+					{
+						if(inRect[i] == 1)
+						{
+							positionOfCirclesx[i] += 10;
+							drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+						}
+					}
+					redrawkey();
+					if(x >= xf && y >= yf)
+					{
+						x += 10;
+						xf += 10;
+						drawRectangle(xf, yf, width, height);
+					}
+					if(x < xf && y >= yf)
+					{
+						xf += 10;
+						x += 10;
+						drawRectangle(x, yf, width, height);
+					}
+					if(x > xf && y <= yf)
+					{
+						x += 10;
+						xf += 10;
+						drawRectangle(xf, y, width, height);
+					}
+					if(x <= xf && y < yf)
+					{
+						xf += 10;
+						x += 10;
+						drawRectangle(x, y, width, height);
+					}
+				}				
+			}
+
+			function redraw()
+			{
+				erase();
+				for(var i = 0; i < positionOfCirclesx.length; i++)
+				{
+					if(positionOfCirclesx[i] < Math.max(xf, x) && positionOfCirclesx[i] > Math.min(xf, x) && positionOfCirclesy[i] < Math.max(yf, y) && positionOfCirclesy[i] > Math.min(yf, y) && move == 0)
+					{
+						drawCircleColor2(positionOfCirclesx[i], positionOfCirclesy[i]);
+					}
+					else
+					{
+						drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+					}					
+				}
+			}
+			function redrawkey()
+			{
+				erase();
+				for(var i = 0; i < positionOfCirclesx.length; i++)
+				{
+					drawCircle2(positionOfCirclesx[i], positionOfCirclesy[i]);
+				}
+			}
+
+			init();
+			c.onmousedown = onDown;
+			c.onmouseup = onUp;
+			document.onkeydown = checkKey;
+		}
+		function erase()
+		{
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			ctx.clearRect(0, 0, c.width, c.height);
+		}
+		function erasepage()
+		{
+			window.location.reload();
+		}
+
+		function savedots(x, y)
+		{
+			var dotxcoords = x;
+			var dotycoords = y;
+			var xmlhttp = new XMLHttpRequest();
+
+			var args = 
+			{
+				'first': dotxcoords,
+				'second': dotycoords
+			};
+			xmlhttp.open("GET", "index.php?"+ dw_encodeVars(args), true);
+			xmlhttp.send();
+		}
+
+		function dw_encodeVars(params)
+		{
+			var str = '';
+			for (var i in params )
+			{
+				str += encodeURIComponent(i) + '=' + encodeURIComponent( params[i] ) + '&';
+			}
+			return str.slice(0, -1);
+		}
+
+	</script>
+</head>
+<body onload = "main()">
+	<h1> Canvas </h1>
+	<center> <div id = "temp"> X and Y coords here </div> </center> <br>
+	<center> <canvas id = "myCanvas" width="1000" height="500" style="border:10px solid #000000;"> </center> <br>
+	<center> <button id = "erase" onclick = "erasepage()"> Clear </button> </center> <br> <br>
+	<center> <button id = "save" onclick = "savedots(positionOfCirclesx, positionOfCirclesy)"> Save </button> </center>
+</body>
+</html>

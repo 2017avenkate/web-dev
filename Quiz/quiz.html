@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> GPA </title>
+		<link rel="stylesheet" type = "text/css" href = "quiz.css">
+		<script type = "text/javascript">
+			function getGpa()
+			{
+				setInterval(function()
+				{
+					var xgpa = parseInt(document.getElementById("first id").value)
+					var ygpa = parseInt(document.getElementById("second id").value)
+					var gpa = document.getElementById("GPA")
+					var totalGpaAvg = (xgpa + ygpa)/2
+					gpa.innerHTML = totalGpaAvg
+				}, 1)				
+			}
+		</script>
+	</head>
+	<body>
+		<h1> Period 3 </h1>
+		<h2> Ashvin Venkatesan </h2>
+
+		<p> GPA: </p>
+		<div id = "GPA"> 4 </div>
+		<br>
+		<p1> Quarter 1:
+			<select onchange = "getGpa()"; id = "first id">
+		  		<option value="4">A</option>
+		  		<option value="3">B</option>
+		  		<option value="2">C</option>
+		  		<option value="1">D</option>
+		  		<option value="0">F</option>
+			</select>
+		</p1>
+		<br>
+		<p2> Quarter 2:
+			<select onchange = "getGpa()"; id = "second id">
+		  		<option value="4">A</option>
+		  		<option value="3">B</option>
+		  		<option value="2">C</option>
+		  		<option value="1">D</option>
+		  		<option value="0">F</option>
+			</select>
+		</p2>
+
+	</body>
+</html>

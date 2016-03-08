@@ -1,0 +1,59 @@
+<html>
+<head>
+	<title>Scrabble</title>
+	<style type = "text/css">
+		h1
+		{
+			text-align: center;
+			text-shadow: 1px 1px #0000FF;
+		}
+		body
+		{
+			background-color: lightblue;
+		}
+	</style>
+	<script>
+		function generateWords()
+		{
+			var substring = document.getElementById('substring').value;
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function()
+			{
+				document.getElementById("output").innerHTML = 'waiting';
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					document.getElementById("output").innerHTML = xmlhttp.responseText.split(" ");
+				}
+			}
+			var args = {'first':substring};
+			xmlhttp.open("GET", "index.php?"+ dw_encodeVars(args), true);
+			xmlhttp.send();
+		}
+		function dw_encodeVars(params)
+		{
+			var str = '';
+			for (var i in params )
+			{
+				str += encodeURIComponent(i) + '=' + encodeURIComponent( params[i] ) + '&';
+			}
+			return str.slice(0, -1);
+		}
+	</script>
+</head>
+<body>
+	<h1> Scrabble Word Finder </h1>
+	<div>
+		<div>
+			<center>
+				Substring: <input type = text id = 'substring'> <br><br>
+			</center>
+		</div>
+		
+		<div><center>Output:
+			<div id = 'output'></div> <br><br>
+		</center></div>
+	</div>
+	<center><input type = button value = 'Generate Words' onclick = 'generateWords();'></center><br>
+	<center><a href = "indexhighlight.php"> PHP Code </a></center> <br>
+	<center><a href = "../index.html"> Home Page </a></center>
+</body>
+</html>

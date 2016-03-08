@@ -1,0 +1,37 @@
+body
+{
+	background-color: lightblue;
+}
+div
+{
+	text-align: center;
+}
+h1
+{
+	text-align: center;
+	color: blue;
+}
+form
+{
+	text-align: center;
+}
+#timer
+{
+	text-align: center;
+}
+#time
+{
+	text-align: center;
+}
+#score
+{
+	text-align: center;
+}
+#scoreInt1
+{
+	text-align: center;
+}
+#display
+{
+	text-align: center;
+}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            TypeRacer
+        </title>
+        <style type = "text/css">
+            body
+            {
+                background-color: lightblue;
+            }
+            div
+            {
+                text-align: center;
+            }
+            h1
+            {
+                text-align: center;
+                text-shadow: 1px 2px #0000FF;
+            }
+            h2
+            {
+            	text-align: center;
+            	text-shadow: 1px 2px #0000FF;
+            }
+            form
+            {
+                text-align: center;
+            }
+            table, th, td
+            {
+			    border: 1px solid black;
+			    border-collapse: collapse;
+			}
+			th, td {
+			    padding: 15px;
+			}
+			th
+			{
+                background-color: red;
+                color: white;
+
+			    text-align: left;
+			}
+            #timer
+            {
+                text-align: center;
+            }
+            #time
+            {
+                text-align: center;
+            }
+            #score
+            {
+                text-align: center;
+            }
+            #scoreInt1
+            {
+                text-align: center;
+            }
+            #display
+            {
+                text-align: center;
+            }
+        </style>
+        <script>        
+            var paragraph = "";
+            var words;
+            var updatedParagraph = " ";
+            var wordCount = 0;
+            function timerFunction()
+            {
+                timerFunction = stop;
+                var interval = setInterval(function()
+                {
+                    var timer = document.getElementById("timer");
+                    var time = parseInt(timer.innerHTML);
+                    //var score = document.getElementById("scoreInt1");
+                    //var scoreInt = parseInt(score.innerHTML);
+                    if(wordCount != 0) document.getElementById("scoreInt1").innerHTML = parseInt((wordCount*1.0/(time*1.0/60.0)), 10);
+                    timer.innerHTML = time + 1;
+                    if(updatedParagraph == "")
+                    {
+                        clearInterval(interval);
+                    }
+                }, 1000)
+            }
+            function check()
+            {            	
+                check = stop;
+                words = paragraph.split(" ");
+                setInterval(function()
+                {
+                    var textbox = document.getElementById("inputWord").value;
+                    if(textbox == (words[0] + " "))
+                    {
+                        wordCount++;
+                        document.getElementById("inputWord").value = "";
+                        words.shift();
+                        updatedParagraph = "";
+                        for(var i = 0; i < words.length; i++)
+                        {
+                            updatedParagraph += words[i] + " ";
+                        }
+                        document.getElementById("paragraph").innerHTML = updatedParagraph;
+                    }
+                    else
+                    {
+                    	isFalse = false;
+                        for(x = 0; x < textbox.length; x++)
+                        {
+                            if(words[0].substring(x, x+1) != textbox.substring(x, x+1)) 
+                            {
+                                document.getElementById("inputWord").style.backgroundColor = "red";
+                                isFalse = true;
+                                break;
+                            }
+                        }
+                        if(!isFalse)
+                        {
+                            document.getElementById("inputWord").style.backgroundColor = "white";
+                        }
+                    }    
+                }, 1)
+            }
+            function restart()
+            {   
+                window.location.reload();
+            }
+            function stop()
+            {
+
+            }
+            function submit()
+            {
+            	if(document.getElementById("username").value != "" && updatedParagraph == "")
+            	{
+            		submit = stop;
+            		updateLeaderboard();
+            		document.getElementById("username").value = "";
+            	}
+            }
+            function generateParagraph()
+			{
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function()
+				{
+					document.getElementById("paragraph").innerHTML = "Loading Paragraph";
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						paragraph = xmlhttp.responseText;
+						document.getElementById("paragraph").innerHTML = paragraph;
+					}
+				}
+				xmlhttp.open("GET", "index.php?", true);
+				xmlhttp.send();
+			}
+			function getLeaderboardData()
+            {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function()
+                {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+                    {
+                        var leaderboardText = xmlhttp.responseText;
+                        var splitData = leaderboardText.split("\n");
+                        for(var x = 1; x < 11; x++)
+                        {
+                           var single = splitData[x-1].split(" ");
+                           var idn = "name" + x.toString();
+                           var ids = "score" + x.toString();
+                           var temp = "";
+                           for(var i = 0; i < single.length - 1; i++)
+                           {
+                                temp += single[i] + " ";
+                           }
+                           document.getElementById(idn).innerHTML = temp;
+                           document.getElementById(ids).innerHTML = single[single.length - 1];
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "leaderboard.php?", true);
+                xmlhttp.send();
+            }
+            function updateLeaderboard()
+            {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function()
+                {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+                    {
+                        getLeaderboardData();
+                    }
+                }
+                var user = document.getElementById("username").value;
+                var speed = document.getElementById("scoreInt1").innerHTML;
+                var args = {name:user, wpm:speed};
+                xmlhttp.open("POST", "updateLeaderboard.php?"+dw_encodeVars(args), true);
+                xmlhttp.send();
+            }
+            function dw_encodeVars(params) 
+            {
+                var str = '';
+                for (var i in params ) 
+                {
+                    str += encodeURIComponent(i) + '=' + encodeURIComponent( params[i] ) + '&';
+                }
+                return str.slice(0, -1);
+            }
+        </script>
+    </head>
+    <body onload = "getLeaderboardData()">
+        <h1> TypeRacer </h1>
+        <br>        
+        <div id = "paragraph"> </div>
+        <br> <br> <br>
+        <form>
+            Enter words here: <br>
+            <input type = "text" id = "inputWord" onkeyup = "timerFunction();check()">
+        </form>
+        <br><br>
+        <div id = "time"> Timer: </div>
+        <div id = "timer">0</div>
+        <br><br>
+        <center>
+                <button onclick="generateParagraph()">Play</button> <button onclick="restart();">New Game</button> <button onclick = "submit();">Submit</button>
+        </center>
+        <form>
+        	Enter username here: <br>
+            <input type = "text" id = "username">
+        </form>               
+        <br>
+        <div id = "score"> WPM: </div>
+        <div id = "scoreInt1"> 0 </div>
+        
+        <br><br><br><br>
+        <h2> Leaderboard </h2>
+        <br>
+        <table style="width:100%">
+          <tr>
+            <th>Ranking</th>
+            <th>Username</th>
+            <th>WPM</th>
+          </tr>
+          <tr>
+              <td>1</td>
+              <td id = "name1"></td>
+              <td id = "score1"></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td id = "name2"></td>
+            <td id = "score2"></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td id = "name3"></td>
+            <td id = "score3"></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td id = "name4"></td>
+            <td id = "score4"></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td id = "name5"></td>
+            <td id = "score5"></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td id = "name6"></td>
+            <td id = "score6"></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td id = "name7"></td>
+            <td id = "score7"></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td id = "name8"></td> 
+            <td id = "score8"></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td id = "name9"></td> 
+            <td id = "score9"></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td id = "name10"></td>
+            <td id = "score10"></td>
+          </tr>
+        </table>
+    </body>
+</html>

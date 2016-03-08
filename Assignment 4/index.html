@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Welcome to the Survey! </title>
+		<style type = "text/css">
+			h1
+			{
+				text-shadow: 2px 2px #FF0000;
+				text-align: center;
+			}
+			body
+			{
+				background-color: lightblue
+			}
+		</style>
+		<script>
+			function validate()
+			{
+				var username = document.getElementById("usernameid").value;
+				var city = document.getElementById("cityid").value;
+				var state = document.getElementById("stateid").value;
+				var zipcode = document.getElementById("zipcodeid").value;
+				var email = document.getElementById("emailid").value;
+				var date = document.getElementById("dateid").value;
+
+				var valusername = /^[A-Z|a-z]+\s[A-Z|a-z]+$/
+				var temp1 = valusername.test(username);
+				var valcity = /^[A-Z|a-z]+$/
+				var temp2 = valcity.test(city);
+				var valstate = /^[A-Z]{2}$/
+				var temp3 = valstate.test(state);
+				var valzipcode = /^\d{5}$/
+				var temp4 = valzipcode.test(zipcode);
+				var valemail = /^[0-9A-z]+@[a-z]+\.[a-z]+$/
+				var temp5 = valemail.test(email);
+				
+				if(!(temp1))
+				{
+					document.getElementById("usernameid").style.background = "red";
+				}
+				if(!(temp2))
+				{
+					document.getElementById("cityid").style.background = "red";
+				}
+				if(!(temp3))
+				{
+					document.getElementById("stateid").style.background = "red";
+				}
+				if(!(temp4))
+				{
+					document.getElementById("zipcodeid").style.background = "red";
+				}
+				if(!(temp5))
+				{
+					document.getElementById("emailid").style.background = "red";
+				}
+
+				if(!(temp1 && temp2 && temp3 && temp4 && temp5))
+				{
+					return false;
+				}
+				return true;
+				
+			}
+			function change1()
+			{
+				document.getElementById("listview").checked = false
+			}
+			function change2()
+			{
+				document.getElementById("dropdown").checked = false
+			}
+			function view1()
+			{
+				document.getElementById("models").size = "1"
+				document.getElementById("vehicle").size = "1"
+			}
+			function view2()
+			{
+				var typesOfCars = ["BMW", "Ferrari", "Lamborhini", "Mercedes-Benz", "Porsche"]
+				var typesOfBikes = ["Schwinn", "Diamondback", "Mongoose", "Shimano", "Nishiki"]
+				var typesOfShoes = ["Nike", "Adidas", "Jordan", "Vans"]
+				var typesOfStores = ["Costco", "Target", "Walmart", "Harris Teeter", "Giant", "Shoppers"]
+				var vehicle = document.getElementById("vehicle");
+				var value = vehicle[vehicle.selectedIndex].value
+				var temp = 0
+
+				document.getElementById("vehicle").size = "4"
+				if(value == "cars")
+				{
+					temp = typesOfCars.length
+				}
+				else if(value == "bikes")
+				{
+					temp = typesOfBikes.length
+				}
+				else if(value == "shoes")
+				{
+					temp = typesOfShoes.length
+				}
+				else
+				{
+					temp = typesOfStores.length
+				}
+				document.getElementById("models").size = temp
+			}
+			function showoptions()
+			{
+				var typesOfCars = ["BMW", "Ferrari", "Lamborhini", "Mercedes-Benz", "Porsche"]
+				var typesOfBikes = ["Schwinn", "Diamondback", "Mongoose", "Shimano", "Nishiki"]
+				var typesOfShoes = ["Nike", "Adidas", "Jordan", "Vans"]
+				var typesOfStores = ["Costco", "Target", "Walmart", "Harris Teeter", "Giant", "Shoppers"]
+				var vehicle = document.getElementById("vehicle");
+				if(vehicle[vehicle.selectedIndex].value == "cars")
+				{
+					var modelsOfCars = document.getElementById("models");
+					for(var i = modelsOfCars.options.length; i >= 0; i--)
+					{
+						modelsOfCars.remove(i);
+					}
+					for(var i = 0; i < typesOfCars.length; i++)
+					{
+						var option = document.createElement("option");
+						option.text = typesOfCars[i];
+						option.value = typesOfCars[i];
+						modelsOfCars.add(option);
+					}
+				}
+				else if(vehicle[vehicle.selectedIndex].value == "bikes")
+				{
+					var modelsOfBikes = document.getElementById("models")
+					for(var i = modelsOfBikes.options.length; i >= 0; i--)
+					{
+						modelsOfBikes.remove(i);
+					}
+					for(var i = 0; i < typesOfBikes.length; i++)
+					{
+						var option = document.createElement("option");
+						option.text = typesOfBikes[i];
+						option.value = typesOfBikes[i];
+						modelsOfBikes.add(option);
+					}
+				}
+				else if(vehicle[vehicle.selectedIndex].value == "shoes")
+				{
+					var modelsOfShoes = document.getElementById("models");
+					for(var i = modelsOfShoes.options.length; i >= 0; i--)
+					{
+						modelsOfShoes.remove(i);
+					}
+					for(var i = 0; i < typesOfShoes.length; i++)
+					{
+						var option = document.createElement("option");
+						option.text = typesOfShoes[i];
+						option.value = typesOfShoes[i];
+						modelsOfShoes.add(option);
+					}
+				}
+				else
+				{
+					var modelsOfStores = document.getElementById("models")
+					for(var i = modelsOfStores.options.length; i >= 0; i--)
+					{
+						modelsOfStores.remove(i);
+					}
+					for(var i = 0; i < typesOfStores.length; i++)
+					{
+						var option = document.createElement("option");
+						option.text = typesOfStores[i];
+						option.value = typesOfStores[i];
+						modelsOfStores.add(option);
+					}
+				}
+
+				var vehicle = document.getElementById("vehicle");
+				var value = vehicle[vehicle.selectedIndex].value
+				var temp = 0
+				if(value == "cars")
+				{
+					temp = typesOfCars.length
+				}
+				else if(value == "bikes")
+				{
+					temp = typesOfBikes.length
+				}
+				else if(value == "shoes")
+				{
+					temp = typesOfShoes.length
+				}
+				else
+				{
+					temp = typesOfStores.length
+				}
+				document.getElementById("models").size = temp
+			}
+			function saveinfo()
+			{
+				var username = document.getElementById("usernameid").value;
+				var city = document.getElementById("cityid").value;
+				var state = document.getElementById("stateid").value;
+				var zipcode = document.getElementById("zipcodeid").value;
+				var email = document.getElementById("emailid").value;
+				var date = document.getElementById("dateid").value;
+				var xmlhttp = new XMLHttpRequest();
+
+				var args = 
+				{
+					'first': username,
+					'second': city,
+					'third': state,
+					'fourth': zipcode,
+					'fifth': email,
+					'sixth': date
+				};
+				xmlhttp.open("GET", "index.php?"+ dw_encodeVars(args), true);
+				xmlhttp.send();
+			}
+
+			function dw_encodeVars(params)
+			{
+				var str = '';
+				for (var i in params )
+				{
+					str += encodeURIComponent(i) + '=' + encodeURIComponent( params[i] ) + '&';
+				}
+				return str.slice(0, -1);
+			}
+		</script>
+	</head>
+	<body>
+		<h1> Welcome to the Survey! </h1>
+		<form name = "myForm" onsubmit = "return validate()" action="index.php" method="POST">
+			Username: <input type = "text" id = "usernameid" name = "username"placeholder = "James Smith" class = "answer"autocomplete = "on" required autofocus><br><br>
+			City: <input type = "text" id = "cityid" name = "city" placeholder = "Fairfax" class = "answer"autocomplete = "on" required><br><br>
+			State: <input type = "text" id = "stateid" name = "state" placeholder = "VA" class = "answer" autocomplete = "on" required><br><br>
+			Zip Code: <input type = "text" id = "zipcodeid" name = "zipcode" placeholder = "20171" class = "answer" autocomplete = "on" required><br><br>
+			E-mail: <input type = "text" id = "emailid" name = "email" placeholder = "asdf12345@gmail.com" class = "answer" autocomplete = "on" required><br><br>
+			Date of Survey: <input type = "date" id = "dateid" name = "date" placeholder = "10/15/15" required><br><br>
+			Questions/Comments:<br>
+			<textarea id = "commentsid" rows = "4" cols = "30">
+			</textarea><br><br>
+			<input type = "radio" name = "view" value = "1" id = "dropdown" onclick = "change1(); view1()" checked> DropDown
+			<input type = "radio" name = "view" value = "2" id = "listview" onclick = "change2(); view2()" > ListView<br>
+			<select id = "vehicle" onchange = "showoptions()">
+				<option value = "cars"> Cars </option>
+				<option value = "bikes"> Bikes </option>
+				<option value = "shoes"> Shoes </option>
+				<option value = "stores"> Stores </option>
+			</select>
+			<select id = "models">
+				<option value = "BMW"> BMW </option>
+				<option value = "Ferrari"> Ferrari </option>
+				<option value = "Lamborghini"> Lamborghini </option>
+				<option value = "Mercedes-Benz"> Mercedes-Benz </option>
+				<option value = "Porsche"> Porsche </option>
+			</select><br><br>
+			<input type = "submit" value = "Submit"> <br><br>
+		</form>
+		<a href = "../index.html"> Home Page </a>
+	</body>
+</html>
